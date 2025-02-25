@@ -17,7 +17,7 @@ const ContactList = (props) => {
             <div className="ui celled list" style={{marginTop: "50px"}} >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <h3 >Contact List</h3>
-                    <Link to="/add">
+                    <Link to="/add">   {/*Route to:*/}
                         <button className='ui blue button right'>Add Contact</button>
                     </Link>
                     

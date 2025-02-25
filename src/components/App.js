@@ -3,7 +3,9 @@ import Header from "./Header";
 import AddContact from "./AddContact"; 
 import {v4 as uuidv4} from "uuid";
 import ContactList from "./ContactList";
+import DeleteContact from './DeleteContact';
 import './App.css';
+import ContactDetail from "./ContactDetails";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
@@ -15,7 +17,7 @@ function App() {
     return savedContacts ? JSON.parse(savedContacts) : [];
   });
   //Handler for delete Contact
-  const deleteContactHandler = (id) =>{
+  const deleteHandler = (id) =>{
     const newContactList = contacts.filter((contacts) =>{
       return contacts.id !== id;
     }) 
@@ -49,9 +51,15 @@ function App() {
       <Router>
         <Header />
         {/*Props*/ }
-        <Routes>
+        <Routes>   {/*Header tag for All routes */}
+          {/* Route for route /add */}
           <Route path="/add" element={<AddContact addContactHandler={addContactHandler}/>}></Route>
-          <Route path="/" element={<ContactList contacts={contacts}  getContactId={deleteContactHandler}/>}></Route>
+          {/* Route for initial webpage*/ }
+          <Route path="/" element={<ContactList contacts={contacts}/>}></Route>
+          {/* Route for individual contact*/ }
+          <Route path="/contacts/:id" element={<ContactDetail></ContactDetail>}></Route>
+          <Route path="/delete/:id" element={<DeleteContact deleteHandler={deleteHandler}></DeleteContact>}></Route>
+
         </Routes>
       </Router>
       

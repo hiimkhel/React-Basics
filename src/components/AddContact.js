@@ -1,4 +1,5 @@
 import React from 'react';
+import withRouter from './middleware';
 
 class AddContact extends React.Component{       
 
@@ -17,6 +18,9 @@ class AddContact extends React.Component{
         this.props.addContactHandler(this.state);
         //Resets value of forms
         this.setState({name: "", email: ""});  
+
+        this.props.navigate("/");
+
         
     }
     render() {
@@ -42,5 +46,5 @@ class AddContact extends React.Component{
         )
     }
 };
-
-export default AddContact;
+//injecting HOC to class component
+export default withRouter(AddContact);
