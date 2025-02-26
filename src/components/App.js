@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import Header from "./Header";
 import AddContact from "./AddContact"; 
 import {v4 as uuidv4} from "uuid";
+import EditContact from "./EditContact"
+import api from "../api/contacts";
 import ContactList from "./ContactList";
 import DeleteContact from './DeleteContact';
 import './App.css';
@@ -10,14 +12,23 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
 function App() {
-  const LOCAL_STORAGE_KEY = "contacts";
+  /* const LOCAL_STORAGE_KEY = "contacts"; */
   //Keeps value of contacts 
-  const [contacts, setContacts] = useState(() =>{
-    const savedContacts = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return savedContacts ? JSON.parse(savedContacts) : [];
-  });
+  const [contacts, setContacts] = useState([]);
+  const retrieveContacts = async() =>{
+    try {
+      const response = await api.get("/contacts"); // Fetch data from API
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching contacts:", error);
+      return [];
+    }
+
+  }
   //Handler for delete Contact
-  const deleteHandler = (id) =>{
+  const deleteHandler = async (id) =>{
+    await api.delete(`/contacts/${id}`);
     const newContactList = contacts.filter((contacts) =>{
       return contacts.id !== id;
     }) 
@@ -25,26 +36,36 @@ function App() {
     setContacts(newContactList);
   }
    //Handler for adding contact
-  const addContactHandler = (contact) =>{
-    
+  const addContactHandler = async (contact) =>{
+    const request = {
+      id: uuidv4(),
+      ...contact,
+    };
+    //routing (POST) Method
+    const response = await api.post("/contacts", request);
     //(...) operation is to copy existing value in the array, and the second value is the current
-    setContacts([...contacts,{id: uuidv4(), ...contact}]); 
+    setContacts([...contacts, response.data]); 
     console.log(contact);
   }
-  
-  useEffect(() =>{})
-  //updates local storage when contacts changes
-  useEffect(()=>{
-    if(contacts.length === 0){
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([]));
-    }
-    else{
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(contacts))
-    }
-    //adds contacts to local storage after converting the array to string
-    
-  }, [contacts]);
 
+  const updateContactHandler = async (contact) => {
+    try {
+        const response = await api.put(`/contacts/${contact.id}`, contact);
+        setContacts(contacts.map((c) => (c.id === contact.id ? response.data : c)));
+    } catch (error) {
+        console.error("Error updating contact:", error);
+    }
+    };
+  
+  useEffect(() =>{
+    const getAllContacts = async () =>{
+      const allContacts = await retrieveContacts();
+      if(allContacts) setContacts(allContacts);
+    }
+    getAllContacts();
+  }, [])
+
+  
 
   return (          //jsx response
     <div className="ui container">
@@ -59,7 +80,7 @@ function App() {
           {/* Route for individual contact*/ }
           <Route path="/contacts/:id" element={<ContactDetail></ContactDetail>}></Route>
           <Route path="/delete/:id" element={<DeleteContact deleteHandler={deleteHandler}></DeleteContact>}></Route>
-
+          <Route path="/edit" element={<EditContact updateContactHandler={updateContactHandler}></EditContact>}></Route>
         </Routes>
       </Router>
       
