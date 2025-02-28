@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const EditContact = ({ updateContactHandler }) => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { id, name: initialName, email: initialEmail } = location.state.contact;
+    const { _id, name: initialName, email: initialEmail } = location.state.contact;
 
     const [name, setName] = useState(initialName);
     const [email, setEmail] = useState(initialEmail);
@@ -17,7 +17,7 @@ const EditContact = ({ updateContactHandler }) => {
         }
 
         // Update the contact
-        updateContactHandler({ id, name, email });
+        updateContactHandler({ _id, name, email });
 
         // Navigate back to home
         navigate("/");

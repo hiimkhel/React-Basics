@@ -29,8 +29,8 @@ function App() {
   //Handler for delete Contact
   const deleteHandler = async (id) =>{
     await api.delete(`/contacts/${id}`);
-    const newContactList = contacts.filter((contacts) =>{
-      return contacts.id !== id;
+    const newContactList = contacts.filter((contact) =>{
+      return contacts._id !== id;
     }) 
     //updates the contacts list to the updated one where the id to remove is filtered out
     setContacts(newContactList);
@@ -50,8 +50,8 @@ function App() {
 
   const updateContactHandler = async (contact) => {
     try {
-        const response = await api.put(`/contacts/${contact.id}`, contact);
-        setContacts(contacts.map((c) => (c.id === contact.id ? response.data : c)));
+        const response = await api.put(`/contacts/${contact._id}`, contact);
+        setContacts(contacts.map((c) => (c._id === contact._id ? response.data : c)));
     } catch (error) {
         console.error("Error updating contact:", error);
     }
@@ -59,8 +59,14 @@ function App() {
   
   useEffect(() =>{
     const getAllContacts = async () =>{
-      const allContacts = await retrieveContacts();
-      if(allContacts) setContacts(allContacts);
+      try {
+        const allContacts = await retrieveContacts();
+        if (allContacts) {
+            setContacts(allContacts); // ✅ Correctly update contacts from backend
+        }
+    } catch (error) {
+        console.error("Error retrieving contacts:", error);
+    }
     }
     getAllContacts();
   }, [])
