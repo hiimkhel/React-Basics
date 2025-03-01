@@ -9,23 +9,28 @@ const ContactList = (props) => {
 
     const renderContactList = props.contacts.map((contact) =>{
         return(
-            <ContactCard contact={contact} clickHander={deleteContactHandler} key={contact.id}></ContactCard>
+            <ContactCard contact={contact} clickHandler={deleteContactHandler} key={contact.id}></ContactCard>
         )
     })
     return (
         <div className='main'>
-            <div className="ui celled list" style={{marginTop: "50px"}} >
+                 <div className="ui celled list" style={{marginTop: "50px"}} >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <h3 >Contact List</h3>
-                    <Link to="/add">   {/*Route to:*/}
-                        <button className='ui blue button right'>Add Contact</button>
-                    </Link>
-                    
+               <h3 >Contact List</h3>
+                <Link to="/add">   
+                    <button className='ui blue button right'>Add Contact</button>
+                </Link>
                 </div>
+            {props.contacts.length === 0 ? <h5>No Contacts yet, add one...</h5> :
+                renderContactList
+            }
             
-            {renderContactList}
 
             </div>
+            
+                    
+                    
+            
         </div>
         
     )

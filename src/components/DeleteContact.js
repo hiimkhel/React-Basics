@@ -13,7 +13,8 @@ const DeleteContact = ({deleteHandler}) => {
         navigate("/");
     }
     return (
-        <div className="ui container" style={{ marginTop: "2rem" }}>
+     
+        <div className="ui container" style={{ marginTop: "2rem" }}>  
             {!contact ? (
                 <h2>No Contacts yet.</h2>
             ) : (

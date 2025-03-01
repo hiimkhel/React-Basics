@@ -30,7 +30,7 @@ function App() {
   const deleteHandler = async (id) =>{
     await api.delete(`/contacts/${id}`);
     const newContactList = contacts.filter((contact) =>{
-      return contacts._id !== id;
+      return contact._id !== id;
     }) 
     //updates the contacts list to the updated one where the id to remove is filtered out
     setContacts(newContactList);
